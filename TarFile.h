@@ -13,7 +13,7 @@ class TarFile{
 private:
     char *fname;
     char *buff;
-    int buff_size;
+    long buff_size;
     TarHeader _head;
 
     vector<TarHeader> headers;
