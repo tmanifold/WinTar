@@ -128,7 +128,7 @@ void TarFile::untar() {
     //read_head();
     for (int i = 0; i < headers.size(); i++) {
 
-        int data_block_size = round512(headers[i].fsize);
+        long data_block_size = round512(headers[i].fsize);
         char *data_block = (char *) malloc(data_block_size);
         this->write_stream.open(headers[i].fname, ios::out | ios::binary);
 
@@ -136,6 +136,13 @@ void TarFile::untar() {
 
         for (int byte = 0; byte < data_block_size; byte++) {
             data_block[byte] = buff[byte + headers[i].start + HBLK_SIZE];
+        }
+
+        this->write_stream.open(headers[i].fname, ios::out);
+        printf("opened %s\n", headers[i].fname);
+
+        for (int byte = 0; byte < headers[i].fsize; byte++) {
+            data_block[i] = buff[i + headers[i].start + 513];
         }
         if (!headers[i].is_dir) {
             write_stream.write(data_block, headers[i].fsize);
