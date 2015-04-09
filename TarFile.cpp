@@ -137,12 +137,6 @@ void TarFile::untar() {
             data_block[byte] = buff[byte + headers[i].start + HBLK_SIZE];
         }
 
-        this->write_stream.open(headers[i].fname, ios::out);
-        printf("opened %s\n", headers[i].fname);
-
-        for (int byte = 0; byte < headers[i].fsize; byte++) {
-            data_block[i] = buff[i + headers[i].start + 513];
-        }
         if (!headers[i].is_dir) {
             write_stream.write(data_block, headers[i].fsize);
         } else {
