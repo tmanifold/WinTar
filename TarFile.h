@@ -5,13 +5,16 @@
 #include <iostream>
 #include <vector>
 #include "TarHeader.h"
+#include <windows.h>
 
 using std::vector;
 using std::ios;
 
 class TarFile{
 private:
-    char *fname;
+    char *file_name;
+    char *full_path;
+    long file_size;
     char *buff;
     long buff_size;
     TarHeader _head;
@@ -27,6 +30,8 @@ public:
     ~TarFile();
     void read_head();
     void untar();
+    void list_tar();
+    int check_block(char *, int);
 };
 
 #endif // _TARFILE_H_
