@@ -33,8 +33,6 @@ TarFile::~TarFile() {
 void TarFile::read_head() {
     file_stream.read(buff, buff_size);
 
-    TarHeader h;
-
     int pos = 0;
     int s = 0;
     char name[100];
@@ -45,24 +43,22 @@ void TarFile::read_head() {
     printf("name\t\tsize (bytes)\n");
 
     while (byte_count < buff_size) {
-        h = TarHeader();
+        _head = TarHeader();
        // printf("\npos: %d\n", pos);
 
         for (int i = 0; i < 512; i++) {
             b[i] = buff[i + pos];
-            //h.buffer[i] = buff[i + pos];
         }
         for (int i = 0; i < 100; i++) {
             name[i] = b[i];
-            //h.fname[i] = h.buffer[i];
+            _head.fname[i] = b[i];
         }
 
         s = otoi(&b[124], 11);
 
-        //h.buffer = b;
-        //h.fname = name;
-        //h.fsize = s;
-        //headers.push_back(h);
+        _head.fsize = s;
+        _head.start = pos;
+        headers.push_back(_head);
 
         printf("%s\t\t%d\n", name, s);
         //printf("%d\t\t%s\t\t%d bytes\t%d\n", pos, name, s, byte_count);
@@ -93,6 +89,26 @@ int TarFile::round512(int n) {
     } else {
         rounded = (n + 512) - (n % 512);
     }
-
     return rounded;
+}
+
+void TarFile::untar() {
+    read_head();
+    for (int i = 0; i < headers.size(); i++) {
+
+        int data_block_size = round512(headers[i].fsize);
+        char *data_block = (char *) malloc(data_block_size);
+
+        this->write_stream.open(headers[i].fname, ios::out | ios::binary);
+        printf("opened %s\n", headers[i].fname);
+
+        for (int byte = 0; byte < headers[i].fsize; byte++) {
+            data_block[i] = buff[i + headers[i].start + 512];
+        }
+        write_stream.write(data_block, headers[i].fsize);
+        printf("\tdata_block_size: %d\n", data_block_size);
+
+        write_stream.close();
+
+    }
 }

@@ -16,11 +16,6 @@ private:
     char link_name[100];
     int start;
     friend class TarFile;
-
-    void destroy();
-
-public:
-    TarHeader();
 };
 
 #endif // _TARHEADER_H_

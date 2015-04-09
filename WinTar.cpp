@@ -13,6 +13,9 @@ int main(int argc, char *argv[]) {
         //printf("processing %s\n", argv[2]);
         TarFile tarf(argv[2]);
         tarf.read_head();
+    } else if (strcmp(argv[1], "-x") == 0) {
+        TarFile tarf(argv[2]);
+        tarf.untar();
     }
     return 0;
 }

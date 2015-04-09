@@ -14,9 +14,11 @@ private:
     char *fname;
     char *buff;
     int buff_size;
+    TarHeader _head;
 
     vector<TarHeader> headers;
     std::fstream file_stream;
+    std::fstream write_stream;
 
     int otoi(char *, unsigned int);
     int round512(int);
@@ -24,7 +26,7 @@ public:
     TarFile(char *n);
     ~TarFile();
     void read_head();
-    void write_tar();
+    void untar();
 };
 
 #endif // _TARFILE_H_
